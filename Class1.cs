@@ -134,14 +134,14 @@ namespace task1
             count--;
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() { return new Enumer(root); }
-        IEnumerator IEnumerable.GetEnumerator() { return new Enumer(root); }
-        int IList<T>.IndexOf(T item)            { return IndexOf(item); }
-        void IList<T>.Insert(int index, T item) { Insert(index, item); }
-        void IList<T>.RemoveAt(int index)       { RemoveAt(index); }
-        public void Add(T item)                 { Insert(count, item); }
-        public void Clear()                     { root = null; count = 0; }
-        public bool Contains(T item)            { return IndexOf(item) != -1; }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()   { return new Enumer(root); }
+        IEnumerator IEnumerable.GetEnumerator()         { return new Enumer(root); }
+        int IList<T>.IndexOf(T item)                    { return IndexOf(item); }
+        void IList<T>.Insert(int index, T item)         { Insert(index, item); }
+        void IList<T>.RemoveAt(int index)               { RemoveAt(index); }
+        public void Add(T item)                         { Insert(count, item); }
+        public void Clear()                             { root = null; count = 0; }
+        public bool Contains(T item)                    { return IndexOf(item) != -1; }
         public void CopyTo(T[] array, int arrayIndex)
         {
             if(arrayIndex<0) throw new ArgumentOutOfRangeException();
@@ -151,6 +151,7 @@ namespace task1
             {
                 array[i]=temp.elem;
                 if(temp.next==null) break;
+                temp=temp.next;
             }
         }
 
