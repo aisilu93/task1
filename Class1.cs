@@ -103,20 +103,11 @@ namespace task1
         void Insert(int index,T item)
         {
             if(index>this.count) { throw new ArgumentOutOfRangeException(); }
-            MyNode temp=root;
-            T a,b;
+            MyNode temp = root;
+            MyNode new_item =new MyNode{elem = item};
             for(int i=0;i<index-1;i++) { temp=temp.next; }
-            a=temp.elem;
-            temp.elem=item;
-            temp=temp.next;
-            while(temp.next!=null)
-            {
-                b=temp.elem;
-                temp.elem=a;
-                a=b;
-            }
-            MyNode last=new MyNode{ elem=a };
-            temp.next=last;
+            new_item.next = temp.next;
+            temp.next = new_item;
             count++;
         }
 
@@ -136,66 +127,76 @@ namespace task1
         //     The System.Collections.Generic.IList`1 is read-only.
         void RemoveAt(int index)
         {
-            if(index>this.count) { throw new ArgumentOutOfRangeException(); }
+            if(index>this.count-1) { throw new ArgumentOutOfRangeException(); }
             MyNode temp=root;
             for(int i=0;i<index-2;i++) { temp=temp.next; }
             temp.next= temp.next.next;
             count--;
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        int IList<T>.IndexOf(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IList<T>.Insert(int index, T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IList<T>.RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Contains(T item)
-        {
-            throw new NotImplementedException();
-        }
-
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() { return new Enumer(root); }
+        IEnumerator IEnumerable.GetEnumerator() { return new Enumer(root); }
+        int IList<T>.IndexOf(T item)            { return IndexOf(item); }
+        void IList<T>.Insert(int index, T item) { Insert(index, item); }
+        void IList<T>.RemoveAt(int index)       { RemoveAt(index); }
+        public void Add(T item)                 { Insert(count, item); }
+        public void Clear()                     { root = null; count = 0; }
+        public bool Contains(T item)            { return IndexOf(item) != -1; }
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if(arrayIndex<0) throw new ArgumentOutOfRangeException();
+            if(array.Length-arrayIndex<count) throw new ArgumentException();
+            MyNode temp=root;
+            for(int i=arrayIndex; i<array.Length; i++)
+            {
+                array[i]=temp.elem;
+                if(temp.next==null) break;
+            }
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            if (root.elem.Equals(item))
+            {
+                root = root.next;
+                count--;
+                return true;
+            }
+            MyNode current=root.next, prev=root;
+            while (current != null)
+            {
+                if(current.elem.Equals(item))
+                {
+                    prev.next = current.next;
+                    count--;
+                    return true;
+                }
+                prev = current;
+                current = current.next;
+            }
+            return false;
         }
-         class MyNode
+
+        class MyNode
         {
             public T elem;
             public MyNode next;
+        }
+
+        class Enumer : IEnumerator<T>
+        {
+            MyNode current;
+            public Enumer(MyNode root) { current = root; }
+            public T Current => current.elem;
+            object IEnumerator.Current => current.elem;
+            public void Dispose(){}
+            public bool MoveNext()
+            {
+                if (current.next == null) return false;
+                current = current.next;
+                return true;
+            }
+            public void Reset() { throw new NotImplementedException(); }
         }
     }
 }
