@@ -70,7 +70,7 @@ namespace task1
         //
         // Returns:
         //     The index of item if found in the list; otherwise, -1.
-        int IndexOf(T item)
+        public int IndexOf(T item)
         {
             MyNode temp=root;
             int index=0;
@@ -100,9 +100,10 @@ namespace task1
         //
         //   T:System.NotSupportedException:
         //     The System.Collections.Generic.IList`1 is read-only.
-        void Insert(int index,T item)
+        public void Insert(int index,T item)
         {
             if(index>this.count) { throw new ArgumentOutOfRangeException(); }
+            if(count == 0) { root = new MyNode { elem=item }; count++; return; }
             MyNode temp = root;
             MyNode new_item =new MyNode{elem = item};
             for(int i=0;i<index-1;i++) { temp=temp.next; }
@@ -125,11 +126,12 @@ namespace task1
         //
         //   T:System.NotSupportedException:
         //     The System.Collections.Generic.IList`1 is read-only.
-        void RemoveAt(int index)
+        public void RemoveAt(int index)
         {
             if(index>this.count-1) { throw new ArgumentOutOfRangeException(); }
+            if (index == 0) { root = root.next; return; }
             MyNode temp=root;
-            for(int i=0;i<index-2;i++) { temp=temp.next; }
+            for(int i=1;i<index-2;i++) { temp=temp.next; }
             temp.next= temp.next.next;
             count--;
         }
@@ -177,6 +179,16 @@ namespace task1
             }
             return false;
         }
+        public String ToStr()
+        {
+            String res = "";
+            if (count==0) return res;
+            foreach (T a in this)
+            {
+                res=res.Insert(res.Length, a.ToString());
+            }
+            return res;
+        }
 
         class MyNode
         {
@@ -187,12 +199,14 @@ namespace task1
         class Enumer : IEnumerator<T>
         {
             MyNode current;
-            public Enumer(MyNode root) { current = root; }
+            MyNode root;
+            public Enumer(MyNode root) { current = null; this.root = root; }
             public T Current => current.elem;
             object IEnumerator.Current => current.elem;
             public void Dispose(){}
             public bool MoveNext()
             {
+                if (current == null) { current = root; return true; }
                 if (current.next == null) return false;
                 current = current.next;
                 return true;
