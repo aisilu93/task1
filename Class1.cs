@@ -13,63 +13,20 @@ namespace task1
         public bool IsReadOnly { get => false; }
         T IList<T>.this[int index]
         {
-            get
-            {
-                MyNode temp=root;
-                for(int i=0;i<index-1;i++) { temp = temp.next; }
-                return temp.elem;
-            }
-            set
-            {
-                MyNode temp=root;
-                for(int i=0; i<index-1;i++) { temp=temp.next; }
-                temp.elem=value;
-            }
+            get { return getElem(index).elem; }
+            set { getElem(index).elem = value; }
         }
-
-        //
-        // Summary:
-        //     Gets or sets the element at the specified index.
-        //
-        // Parameters:
-        //   index:
-        //     The zero-based index of the element to get or set.
-        //
-        // Returns:
-        //     The element at the specified index.
-        //
-        // Exceptions:
-        //   T:System.ArgumentOutOfRangeException:
-        //     index is not a valid index in the System.Collections.Generic.IList`1.
-        //
-        //   T:System.NotSupportedException:
-        //     The property is set and the System.Collections.Generic.IList`1 is read-only.
         T this[int index]
         {
-            get
-            {
-                MyNode temp=root;
-                for(int i=0;i<index-1;i++) { temp=temp.next; }
-                return temp.elem;
-            }
-            set
-            {
-                MyNode temp=root;
-                for(int i=0;i<index-1;i++) { temp=temp.next; }
-                temp.elem=value;
-            }
+            get { return getElem(index).elem; }
+            set { getElem(index).elem=value; }
         }
-
-        //
-        // Summary:
-        //     Determines the index of a specific item in the System.Collections.Generic.IList`1.
-        //
-        // Parameters:
-        //   item:
-        //     The object to locate in the System.Collections.Generic.IList`1.
-        //
-        // Returns:
-        //     The index of item if found in the list; otherwise, -1.
+        private MyNode getElem(int index)
+        {
+            MyNode temp = root;
+            for (int i=0; i<index-1; i++) { temp = temp.next; }
+            return temp;
+        }
         public int IndexOf(T item)
         {
             MyNode temp=root;
@@ -82,50 +39,17 @@ namespace task1
             }
             return -1;
         }
-
-        //
-        // Summary:
-        //     Inserts an item to the System.Collections.Generic.IList`1 at the specified index.
-        //
-        // Parameters:
-        //   index:
-        //     The zero-based index at which item should be inserted.
-        //
-        //   item:
-        //     The object to insert into the System.Collections.Generic.IList`1.
-        //
-        // Exceptions:
-        //   T:System.ArgumentOutOfRangeException:
-        //     index is not a valid index in the System.Collections.Generic.IList`1.
-        //
-        //   T:System.NotSupportedException:
-        //     The System.Collections.Generic.IList`1 is read-only.
         public void Insert(int index,T item)
         {
             if(index>this.count) { throw new ArgumentOutOfRangeException(); }
             if(count == 0) { root = new MyNode { elem=item }; count++; return; }
             MyNode temp = root;
-            MyNode new_item =new MyNode{elem = item};
-            for(int i=0;i<index-1;i++) { temp=temp.next; }
+            MyNode new_item = new MyNode{elem = item};
+            temp = getElem(index);
             new_item.next = temp.next;
             temp.next = new_item;
             count++;
         }
-
-        //
-        // Summary:
-        //     Removes the System.Collections.Generic.IList`1 item at the specified index.
-        //
-        // Parameters:
-        //   index:
-        //     The zero-based index of the item to remove.
-        //
-        // Exceptions:
-        //   T:System.ArgumentOutOfRangeException:
-        //     index is not a valid index in the System.Collections.Generic.IList`1.
-        //
-        //   T:System.NotSupportedException:
-        //     The System.Collections.Generic.IList`1 is read-only.
         public void RemoveAt(int index)
         {
             if(index>this.count-1) { throw new ArgumentOutOfRangeException(); }
@@ -138,9 +62,6 @@ namespace task1
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()   { return new Enumer(root); }
         IEnumerator IEnumerable.GetEnumerator()         { return new Enumer(root); }
-        int IList<T>.IndexOf(T item)                    { return IndexOf(item); }
-        void IList<T>.Insert(int index, T item)         { Insert(index, item); }
-        void IList<T>.RemoveAt(int index)               { RemoveAt(index); }
         public void Add(T item)                         { Insert(count, item); }
         public void Clear()                             { root = null; count = 0; }
         public bool Contains(T item)                    { return IndexOf(item) != -1; }
@@ -159,16 +80,17 @@ namespace task1
 
         public bool Remove(T item)
         {
+            if (root==null) return false;
             if (root.elem.Equals(item))
             {
                 root = root.next;
                 count--;
                 return true;
             }
-            MyNode current=root.next, prev=root;
+            MyNode current = root.next, prev = root;
             while (current != null)
             {
-                if(current.elem.Equals(item))
+                if (current.elem.Equals(item))
                 {
                     prev.next = current.next;
                     count--;
@@ -179,7 +101,7 @@ namespace task1
             }
             return false;
         }
-        public String ToStr()
+        public override string ToString()
         {
             String res = "";
             if (count==0) return res;
@@ -211,7 +133,7 @@ namespace task1
                 current = current.next;
                 return true;
             }
-            public void Reset() { throw new NotImplementedException(); }
+            public void Reset() { current = null; }
         }
     }
 }
