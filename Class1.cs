@@ -19,30 +19,30 @@ namespace task1
         T this[int index]
         {
             get { return getElem(index).elem; }
-            set { getElem(index).elem=value; }
+            set { getElem(index).elem = value;}
         }
         private MyNode getElem(int index)
         {
             MyNode temp = root;
-            for (int i=0; i<index-1; i++) { temp = temp.next; }
+            for (int i = 0; i < index - 1; i++) { temp = temp.next; }
             return temp;
         }
         public int IndexOf(T item)
         {
-            MyNode temp=root;
-            int index=0;
-            while(temp.next!=null)
+            MyNode temp = root;
+            int index = 0;
+            while (temp.next != null)
             {
-                if(temp.elem.Equals(item)) return index;
+                if (temp.elem.Equals(item)) return index;
                 index++;
-                temp=temp.next;
+                temp = temp.next;
             }
             return -1;
         }
         public void Insert(int index,T item)
         {
-            if(index>this.count) { throw new ArgumentOutOfRangeException(); }
-            if(count == 0) { root = new MyNode { elem=item }; count++; return; }
+            if (index > this.count) { throw new ArgumentOutOfRangeException(); }
+            if (count == 0) { root = new MyNode { elem = item }; count++; return; }
             MyNode temp = root;
             MyNode new_item = new MyNode{elem = item};
             temp = getElem(index);
@@ -52,11 +52,11 @@ namespace task1
         }
         public void RemoveAt(int index)
         {
-            if(index>this.count-1) { throw new ArgumentOutOfRangeException(); }
+            if (index > this.count - 1) { throw new ArgumentOutOfRangeException(); }
             if (index == 0) { root = root.next; return; }
             MyNode temp=root;
-            for(int i=1;i<index-2;i++) { temp=temp.next; }
-            temp.next= temp.next.next;
+            for(int i = 1; i < index - 2; i++) { temp=temp.next; }
+            temp.next = temp.next.next;
             count--;
         }
 
@@ -67,20 +67,20 @@ namespace task1
         public bool Contains(T item)                    { return IndexOf(item) != -1; }
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if(arrayIndex<0) throw new ArgumentOutOfRangeException();
-            if(array.Length-arrayIndex<count) throw new ArgumentException();
+            if (arrayIndex < 0) throw new ArgumentOutOfRangeException();
+            if (array.Length - arrayIndex < count) throw new ArgumentException();
             MyNode temp=root;
-            for(int i=arrayIndex; i<array.Length; i++)
+            for(int i = arrayIndex; i < array.Length; i++)
             {
-                array[i]=temp.elem;
-                if(temp.next==null) break;
-                temp=temp.next;
+                array[i] = temp.elem;
+                if (temp.next == null) break;
+                temp = temp.next;
             }
         }
 
         public bool Remove(T item)
         {
-            if (root==null) return false;
+            if (root == null) return false;
             if (root.elem.Equals(item))
             {
                 root = root.next;
@@ -104,7 +104,7 @@ namespace task1
         public override string ToString()
         {
             String res = "";
-            if (count==0) return res;
+            if (count == 0) return res;
             foreach (T a in this)
             {
                 res=res.Insert(res.Length, a.ToString());
